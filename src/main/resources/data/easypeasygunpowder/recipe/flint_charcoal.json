@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FC",
+    "CF"
+  ],
+  "key": {
+    "F": "minecraft:flint",
+    "C": "minecraft:charcoal"
+  },
+  "result": {
+    "id": "minecraft:gunpowder",
+    "count": 1
+  }
+}
