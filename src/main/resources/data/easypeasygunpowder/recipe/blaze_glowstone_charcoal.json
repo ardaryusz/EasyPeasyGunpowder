@@ -5,9 +5,15 @@
     "GC"
   ],
   "key": {
-    "B": "minecraft:blaze_powder",
-    "G": "minecraft:glowstone_dust",
-    "C": "minecraft:charcoal"
+    "B": {
+      "item": "minecraft:blaze_powder"
+    },
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "C": {
+      "item": "minecraft:charcoal"
+    }
   },
   "result": {
     "id": "minecraft:gunpowder",

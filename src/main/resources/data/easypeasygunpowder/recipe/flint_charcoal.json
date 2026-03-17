@@ -5,8 +5,12 @@
     "CF"
   ],
   "key": {
-    "F": "minecraft:flint",
-    "C": "minecraft:charcoal"
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "C": {
+      "item": "minecraft:charcoal"
+    }
   },
   "result": {
     "id": "minecraft:gunpowder",
