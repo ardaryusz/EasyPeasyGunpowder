@@ -1,0 +1,13 @@
+{
+  "itemGroup.easypeasygunpowder": "Example Mod Tab",
+  "block.easypeasygunpowder.example_block": "Example Block",
+  "item.easypeasygunpowder.example_item": "Example Item",
+
+  "easypeasygunpowder.configuration.title": "Easy Peasy Gunpowder Configs",
+  "easypeasygunpowder.configuration.section.easypeasygunpowder.common.toml": "Easy Peasy Gunpowder Configs",
+  "easypeasygunpowder.configuration.section.easypeasygunpowder.common.toml.title": "Easy Peasy Gunpowder Configs",
+  "easypeasygunpowder.configuration.items": "Item List",
+  "easypeasygunpowder.configuration.logDirtBlock": "Log Dirt Block",
+  "easypeasygunpowder.configuration.magicNumberIntroduction": "Magic Number Text",
+  "easypeasygunpowder.configuration.magicNumber": "Magic Number"
+}
