@@ -1,81 +1,86 @@
+// This is a minimal setup of a Forge mod workspace for a recipe-only mod.
+
 plugins {
-	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
-	id 'maven-publish'
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+    id 'net.minecraftforge.gradle' version '[7.0.3,8)'
 }
 
-version = project.mod_version
-group = project.maven_group
+version = mod_version
+group = mod_group_id
 
 base {
-	archivesName = project.archives_base_name
+    archivesName = "${mod_id}-${mc_range}-forge"
 }
 
-// Minecraft version range text used only for filenames (not for dependencies)
-def mcRange = (project.findProperty("mc_range") ?: "unknown-mc").toString()
+// Mojang ships Java 21 to end users in 1.20.5+, so mods should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+// Include generated resources.
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+
+    runs {
+        configureEach {
+            workingDir = layout.projectDirectory.dir('run')
+
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        register('client')
+
+        register('server') {
+            args '--nogui'
+        }
+
+        register('gameTestServer')
+
+        register('data') {
+            workingDir = layout.projectDirectory.dir('run-data')
+
+            args '--mod', mod_id,
+                    '--all',
+                    '--output', layout.projectDirectory.dir('src/generated/resources'),
+                    '--existing', layout.projectDirectory.dir('src/main/resources')
+        }
+    }
+}
 
 repositories {
-	// Loom adds the essential repositories automatically.
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
-	}
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.1'
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+    options.encoding = 'UTF-8'
 }
 
-java {
-	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
-}
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            mod_id       : mod_id,
+            mod_name     : mod_name,
+            mod_version  : mod_version,
+            mod_license  : mod_license,
+            mc_range     : mc_range,
+            forge_version: forge_version
+    ]
 
-// ---- JAR NAMING ----
-// Dev jar (not what you publish to CurseForge)
-tasks.named("jar") {
-	archiveFileName.set("${base.archivesName.get()}-${mcRange}-${project.version}-dev.jar")
+    inputs.properties replaceProperties
 
-	inputs.property "archivesName", base.archivesName.get()
-
-	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}" }
-	}
-}
-
-// The jar you actually ship (Fabric Loom output)
-tasks.named("remapJar") {
-	archiveFileName.set("${base.archivesName.get()}-${mcRange}-${project.version}.jar")
-}
-
-// Optional: make sources jar match too
-tasks.named("remapSourcesJar") {
-	archiveFileName.set("${base.archivesName.get()}-${mcRange}-${project.version}-sources.jar")
-}
-
-// ---- MAVEN PUBLISHING ----
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
-			from components.java
-		}
-	}
-
-	repositories {
-		// Add publish repos here if you use them
-	}
+    filesMatching('META-INF/mods.toml') {
+        expand replaceProperties
+    }
 }

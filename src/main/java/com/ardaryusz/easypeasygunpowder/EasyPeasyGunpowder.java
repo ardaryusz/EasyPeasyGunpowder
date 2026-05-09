@@ -1,16 +1,12 @@
 package com.ardaryusz.easypeasygunpowder;
 
-import net.fabricmc.api.ModInitializer;
+import net.minecraftforge.fml.common.Mod;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+@Mod(EasyPeasyGunpowder.MODID)
+public class EasyPeasyGunpowder {
+    public static final String MODID = "easypeasygunpowder";
 
-public class EasyPeasyGunpowder implements ModInitializer {
-	public static final String MOD_ID = "easypeasygunpowder";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-	@Override
-	public void onInitialize() {
-		LOGGER.info("Easy Peasy Gunpowder has Launched!");
-	}
+    public EasyPeasyGunpowder() {
+        // Recipe-only mod. Nothing to register.
+    }
 }
